@@ -1,4 +1,3 @@
-
 # *** IMAGE XY COORDS IS TOP LEFT
 import random
 import math

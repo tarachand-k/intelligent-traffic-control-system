@@ -11,6 +11,49 @@ from test import test_video_detection
 from simulation import start_simulation
 
 
+class TestVideoWindow(ctk.CTkToplevel):
+    def __init__(self, input_folder, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.input_folder = input_folder
+        self.geometry("400x300")
+        self.resizable(False, False)
+        self.title("Test Video")
+        self.test_live_window = None
+        self.test_recorded_window = None
+
+        container_frame = ctk.CTkFrame(self)
+        container_frame.pack(expand=True)
+
+        app_frame = ctk.CTkFrame(container_frame, fg_color="transparent")
+        app_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+
+        set_input_btn = Button(
+            app_frame,
+            text="Test Live Video",
+            command=self.test_live_video,
+        )
+        set_input_btn.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
+
+        set_output_btn = Button(
+            app_frame,
+            text="Test Recorded Video",
+            command=self.test_recorded_video,
+        )
+        set_output_btn.grid(row=1, column=0, pady=10, padx=10, sticky="nsew")
+    
+    def test_live_video(self):
+        if self.test_live_window is None or not self.test_live_window.winfo_exists():
+            self.test_live_window = test_video_detection(self.input_folder, isLive=True)
+        else:
+            self.test_live_window.focus()
+
+    def test_recorded_video(self):
+        if self.test_recorded_window is None or not self.test_recorded_window.winfo_exists():
+            self.test_recorded_window = test_video_detection(self.input_folder)
+        else:
+            self.test_recorded_window.focus()
+
+
 class TestImgWindow(ctk.CTkToplevel):
     def __init__(self, image_processor, object_detector, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -79,7 +122,6 @@ class App(ctk.CTk):
         self.geometry("500x400")
         self.resizable(False, False)
         self.title("Main Window")
-        self.config()
         self.input_folder = None
         self.output_folder = None
         self.test_img_window = None
@@ -190,7 +232,8 @@ class App(ctk.CTk):
         if not self.is_folder_set():
             return
         if self.test_video_window is None or not self.test_video_window.winfo_exists():
-            self.test_video_window = test_video_detection(self.input_folder)
+            # self.test_video_window = test_video_detection(self.input_folder)
+            self.test_video_window = TestVideoWindow(self.input_folder)
         else:
             self.test_video_window.focus()
 

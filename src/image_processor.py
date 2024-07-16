@@ -42,7 +42,7 @@ class ImageProcessing:
 
         img_path = os.path.join(self.output_folder, f"lane_{lane}.png")
         cv2.imwrite(img_path, image)
-        print("Saved processed image to" + img_path)
+        print("Saved processed image to: " + img_path)
 
 
 # Example usage
